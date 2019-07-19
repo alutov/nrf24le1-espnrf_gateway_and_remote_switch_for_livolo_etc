@@ -1,0 +1,1 @@
+nrfcrc cuts binary nrf image at 6144 bytes and write crc to NRF_**** file. This file valid for update gateway and client via RF.
