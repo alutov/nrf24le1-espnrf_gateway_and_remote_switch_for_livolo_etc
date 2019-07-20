@@ -12,7 +12,9 @@ the supply voltage of the NRF24LE1.
 least one switch be turned on. (In programming mode, the MCU operates at 16MHz without sleep mode and consumes more.)
   Using the assembler without any sdk allowed the client to reduce the clock frequency by 16 times (1MHz), and when generating the
 RC code MCU works at 125 kHz, and accordingly to reduce power consumption, and in the gateway it is free to store in memory not only
-the program code, but and reserve space for code updates and for 64 parameter names. More in description.doc, a bit later.
+the program code, but and reserve space for code updates and for 64 parameter names. I'm still testing the code. My clients control
+the air conditioner mitsubishi, “pressing” it on the button on-off, and 2 switches, livolo and maifom. I haven’t done anything in
+livolo yet, in maifom I increased the capacity by 3v. More in description.doc, a bit later.
 
   Gateway код позволяет шлюзу SP8266 и NRF24LE1(espnrf), соединенными по rs232, управлять NRF24LE1 клиентом  при помощи MQTT сервера.
 Соединения на стороне шлюза ESP tx <-> NRF(32pin) p0.4(rx), ESP rx <-> NRF(32pin) p0.3(tx), ESP gpio02 <-> NRF reset. Шлюз опрашивает
@@ -26,4 +28,6 @@ espnrf web интерфейсе.
 хотя бы один выключатель был включен. (В режиме программирования MCU работает на 16MHz без режима сна и потребляет больше.)
   Использование ассемблера без всяких sdk позволило в клиенте понизить тактовую в частоту в 16 раз(1MHz), а при генерации RC кода
 MCU работает на 125 kHz, и соответственно снизить потребление энергии, а в шлюзе свободно вместить в память не только код программы,
-но и зарезервировать место для обновления кода и для 64 имен параметров. Подробнее в description.doc, чуть позже. 
+но и зарезервировать место для обновления кода и для 64 имен параметров. Код еще тестирую. У меня клиенты управляют кондиционером
+mitsubishi, "нажимая" ему на кнопку вкл-выкл, и 2-мя выключателями, livolo и maifom.  В livolo пока ничего не делал, в maifom
+увеличил емкость по 3v. Подробнее в description.doc, чуть позже. 
