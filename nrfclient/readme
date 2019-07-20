@@ -1,2 +1,4 @@
-Nrf24 client code and binary. I use Telemark Assebler 8051 for compile.
+Two Nrf24 clients codes and binaries. I use Telemark Assebler 8051 for compile.
 http://www.cpcalive.com/docs/TASMMAN.HTM#PROM%20PROGRAMMING
+Client 00 use RFID 0, channel 100(64h) and livolo protocol.
+Client 01 use RFID 1, channel 102(66h) and rcswitch protocol.
