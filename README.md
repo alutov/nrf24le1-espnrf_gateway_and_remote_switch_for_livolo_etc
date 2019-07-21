@@ -15,7 +15,7 @@ least one switch be turned on. (In programming mode, the MCU operates at 16MHz w
 RC code MCU works at 125 kHz, and accordingly to reduce power consumption, and in the gateway it is free to store in memory not only
 the program code, but and reserve space for code updates and for 64 parameter names. I'm still testing the code. My clients control
 the air conditioner mitsubishi by “pressing” it on the on-off button, and 2 switches, livolo and maifom. I haven’t done anything in
-livolo yet, in maifom I increased the capacity by 3v. More in description.doc, a bit later.
+livolo yet, in maifom I increased the capacity before ams1117. More in description.doc, a bit later.
 
   Gateway код позволяет шлюзу SP8266 и NRF24LE1(espnrf), соединенными по rs232, управлять NRF24LE1 клиентом  при помощи MQTT сервера.
 Соединения на стороне шлюза ESP gpio1(tx) <-> NRF(32pin) p0.4(rx), ESP gpio3(rx) <-> NRF(32pin) p0.3(tx), ESP gpio02 <-> NRF reset.
@@ -31,4 +31,4 @@ livolo yet, in maifom I increased the capacity by 3v. More in description.doc, a
 MCU работает на 125 kHz, и соответственно снизить потребление энергии, а в шлюзе свободно вместить в память не только код программы,
 но и зарезервировать место для обновления кода и для 64 имен параметров. Код еще тестирую. У меня клиенты управляют кондиционером
 mitsubishi, "нажимая" ему на кнопку вкл-выкл, и 2-мя выключателями, livolo и maifom.  В livolo пока ничего не делал, в maifom
-увеличил емкость по 3v. Подробнее в description.doc, чуть позже. 
+увеличил емкость перед ams1117. Подробнее в description.doc, чуть позже. 
