@@ -9,8 +9,8 @@ each parameter up to 32 characters must be defined when configuring espnrf  in t
   Client code allows to use NRF24LE1 as a remote two-channel switch with state monitoring and control of both the impulse (p0.2 for sw1,
 p0.3 for sw2) and the livolo or rcswitch protocol (p0.5). The first 2 parameters reflect the status of the switches (1-on, 0-off),
 the third parameter is used to display the temperature from the connected to p0.4 DS18B20 sensor (relevant for embedding the NRF24LE1
-in the air conditioner), the fourth parameter is the supply voltage of the NRF24LE1. Client switch on RF receiver for up to ~50mS
-two times per second then go sleep mode. A software update is also supported for both esp and gateway and client nrf. To update
+in the air conditioner), the fourth parameter is the supply voltage of the NRF24LE1. Client switches on RF receiver for up to ~50mS
+two times per second then goes sleep mode. A software update is also supported for both esp and gateway and client nrf. To update
 the client, it is only necessary that at least one switch be turned on. (In programming mode, the MCU operates at 16MHz without
 sleep mode and consumes more.)
   Using the assembler without any sdk allowed the client to reduce the clock frequency by 16 times (1MHz), and when generating the
