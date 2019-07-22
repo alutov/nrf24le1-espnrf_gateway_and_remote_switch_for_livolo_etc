@@ -19,5 +19,5 @@ the program code but reserve space for code updates and for 64 parameter names. 
 the air conditioner mitsubishi by “pressing” it on the on-off button, and 2 switches, livolo and maifom. Connection nrf to switches
 have made by 5 wires: nrf gnd <-> RF gnd, nrf vdd <-> RF +3v,  nrf p0.5(control) <-> RF DATA, p0.0(state1) <-> PIC 11 livolo(LED)
 or 11 maifom(control1), p0.1(state2) <-> PIC 5 livolo(LED) or 13 maifom(control2). See pictures in other folder. I haven’t done
-anything else in livolo yet, in maifom I increased the capacity before ams1117.
+anything else in livolo yet, in maifom I've increased the capacity before ams1117.
 
