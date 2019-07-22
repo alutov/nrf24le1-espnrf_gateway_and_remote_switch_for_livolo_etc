@@ -13,9 +13,9 @@ in the air conditioner), the fourth parameter is the supply voltage of the NRF24
 two times per second then goes sleep mode. A software update is also supported for both esp and gateway and client nrf. To update
 the client, it is only necessary that at least one switch be turned on. (In programming mode, the MCU operates at 16MHz without
 sleep mode and consumes more.)
-  Using the assembler without any sdk allowed the client to reduce the clock frequency by 16 times (1MHz), and when generating the
-RC code MCU works at 125 kHz, and accordingly to reduce power consumption, and in the gateway it is free to store in memory not only
-the program code, but and reserve space for code updates and for 64 parameter names. I'm still testing the code. My clients control
+  Using the assembler without any sdk allowed the client to reduce the clock frequency by 16 times (1MHz) and when generating the
+RC code MCU works at 125 kHz and accordingly to reduce power consumption, and in the gateway it is free to store in memory not only
+the program code but reserve space for code updates and for 64 parameter names. I'm still testing the code. My clients control
 the air conditioner mitsubishi by “pressing” it on the on-off button, and 2 switches, livolo and maifom. Connection nrf to switches
 have made by 5 wires: nrf gnd <-> RF gnd, nrf vdd <-> RF +3v,  nrf p0.5(control) <-> RF DATA, p0.0(state1) <-> PIC 11 livolo(LED)
 or 11 maifom(control1), p0.1(state2) <-> PIC 5 livolo(LED) or 13 maifom(control2). See pictures in other folder. I haven’t done
