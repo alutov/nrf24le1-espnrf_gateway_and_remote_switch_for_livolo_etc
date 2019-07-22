@@ -16,6 +16,6 @@ least one switch be turned on. (In programming mode, the MCU operates at 16MHz w
 RC code MCU works at 125 kHz, and accordingly to reduce power consumption, and in the gateway it is free to store in memory not only
 the program code, but and reserve space for code updates and for 64 parameter names. I'm still testing the code. My clients control
 the air conditioner mitsubishi by “pressing” it on the on-off button, and 2 switches, livolo and maifom. Connection nrf to switches
-made by 5 wires: nrf gnd <-> RF gnd, nrf vdd <-> RF +3v,  nrf p0.5(control) <-> RF DATA, p0.0(state1) <-> PIC 11 livolo(LED) or 11 maifom(control1), p0.1(state2) <-> PIC 5 livolo(LED) or 13 maifom(control2) I haven’t done anything else in livolo yet, in maifom
+made by 5 wires: nrf gnd <-> RF gnd, nrf vdd <-> RF +3v,  nrf p0.5(control) <-> RF DATA, p0.0(state1) <-> PIC 11 livolo(LED) or 11 maifom(control1), p0.1(state2) <-> PIC 5 livolo(LED) or 13 maifom(control2). I haven’t done anything else in livolo yet, in maifom
 I increased the capacity before ams1117. More in description.doc, a bit later.
 
