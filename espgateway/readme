@@ -1,6 +1,7 @@
 For ESP8266 I use modified code from seb821/espRFLinkMQTT 
 (https://github.com/seb821/espRFLinkMQTT). Thanx for it!)
 You need compile in Arduino as described by seb821.
-For second gateway you ned to replace all "nrf1" by "nrf2"
+For second gateway you need to replace all "nrf1" by "nrf2"
 in file common.h and change  RRFID from 0 to 1 and RFCH in file
-NRFSVR00.a51 and recommpile both esp and nrf.
+NRFSVR00.a51 and recompile both esp and nrf.
+nrf1 - RRFID 0, nrf2 - RRFID 1, .... nrf9 - RRFID 8.
