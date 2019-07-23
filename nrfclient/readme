@@ -4,4 +4,4 @@ Client 01 use RFID 1, channel 102(66h) and rcswitch protocol.
 I use Telemark Assebler 8051 for compile.
 http://www.cpcalive.com/docs/TASMMAN.HTM
 http://old-dos.ru/index.php?page=files&mode=files&do=show&id=1385
-Командная строка: tasm.exe -51 -b -fff NRFCL00.A51
+Example of compile command line: tasm.exe -51 -b -fff NRFCL00.A51
