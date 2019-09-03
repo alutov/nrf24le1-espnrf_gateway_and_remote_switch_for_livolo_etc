@@ -1,4 +1,4 @@
-Nrf24 gateway code. RFCH 100(64h). I use Telemark Assebler 8051 for compile.
+Nrf24 gateway code. RFCH 100(64h). I use Telemark Assembler 8051 for compile.
 http://www.cpcalive.com/docs/TASMMAN.HTM
 http://old-dos.ru/index.php?page=files&mode=files&do=show&id=1385
 Example of compile command line: tasm.exe -51 -b -fff NRFSRV00.A51
