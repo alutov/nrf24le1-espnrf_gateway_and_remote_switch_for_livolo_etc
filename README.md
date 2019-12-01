@@ -1,6 +1,8 @@
 ![PROJECT_PHOTO](https://raw.githubusercontent.com/alutov/nrf24le1-espnrf_gateway_and_remote_switch_for_livolo_etc/master/other/livolo1.jpg)
 ![PROJECT_PHOTO](https://raw.githubusercontent.com/alutov/nrf24le1-espnrf_gateway_and_remote_switch_for_livolo_etc/master/other/livolo2.jpg)
-# ESP8266+NRF24LE1 gateway and NRF24LE1 remote switch for livolo etc.
+![PROJECT_PHOTO](https://raw.githubusercontent.com/alutov/nrf24le1-espnrf_gateway_and_remote_switch_for_livolo_etc/master/other/espnrf3.jpg)
+![PROJECT_PHOTO]( https://raw.githubusercontent.com/alutov/nrf24le1-espnrf_gateway_and_remote_switch_for_livolo_etc/master/other/espnrf4.jpg)
+# ESP8266+NRF24LE1 MQTT gateway and NRF24LE1 remote switch for livolo etc.
   Gateway code allows to use an ESP8266 and NRF24LE1(espnrf) connected each other via rs232 as a gateway to control NRF24LE1 client
 by MQTT server. Connection on gateway side: ESP gpio1(tx) <-> NRF(32pin) p0.4(rx), ESP gpio3(rx) <-> NRF(32pin) p0.3(tx),
 ESP gpio02 <-> NRF reset.
