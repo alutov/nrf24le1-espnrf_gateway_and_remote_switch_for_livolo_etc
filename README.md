@@ -25,4 +25,5 @@ switches is made by 5 wires: nrf gnd <-> RF gnd, nrf vdd <-> RF +3v,  nrf p0.5(c
 livolo(LED) or 11 maifom(control1), nrf p0.1(state2) <-> PIC 5 livolo(LED) or 13 maifom(control2). See pictures in other folder.
 Since the consumption of the NRF is pulsed, for stable operation I advise you to increase the capacitance of the capacitors before 3v regulator. In livolo I've increased the capacitor from 330uF 25v to 1000uF 25v, in maifom 220uF 16v to 2000uF 16v before +3v HT7130
 regulator.
+  See readme_rus.pdf
 
