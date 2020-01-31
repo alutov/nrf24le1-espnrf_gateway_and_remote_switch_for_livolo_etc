@@ -2,7 +2,7 @@
 ![PROJECT_PHOTO](https://raw.githubusercontent.com/alutov/nrf24le1-espnrf_gateway_and_remote_switch_for_livolo_etc/master/other/livolo2.jpg)
 ![PROJECT_PHOTO](https://raw.githubusercontent.com/alutov/nrf24le1-espnrf_gateway_and_remote_switch_for_livolo_etc/master/other/espnrf3.jpg)
 ![PROJECT_PHOTO]( https://raw.githubusercontent.com/alutov/nrf24le1-espnrf_gateway_and_remote_switch_for_livolo_etc/master/other/espnrf4.jpg)
-# ESP8266+NRF24LE1 MQTT gateway and NRF24LE1 remote switch for livolo etc.
+# ESP8266+NRF24LE1 MQTT gateway and NRF24LE1 remote switch for embedding in livolo etc.
 
    Gateway code allows to use an ESP8266 and NRF24LE1(espnrf) connected each other via rs232 as a gateway to control NRF24LE1 client by
 MQTT server. Connection on gateway side: ESP tx <-> NRF(32pin) p0.4(rx), ESP rx <-> NRF(32pin) p0.3(tx), ESP gpio02 <-> NRF reset. The gateway polls 16 NRF clients, with 4 numeric parameters each. The name of each parameter up to 32 characters must be defined when configuring in the espnrf web interface.
@@ -10,7 +10,7 @@ MQTT server. Connection on gateway side: ESP tx <-> NRF(32pin) p0.4(rx), ESP rx 
 
 
 
-# ESP8266+NRF24LE1 MQTT шлюз и NRF24LE1 беспроводной выключатель для livolo и т.п.
+# ESP8266+NRF24LE1 MQTT шлюз и NRF24LE1 беспроводной выключатель для встраивания в livolo и т.п.
 
    Gateway код позволяет шлюзу ESP8266 и NRF24LE1(espnrf), соединенными по rs232, управлять NRF24LE1 клиентом  при помощи MQTT сервера.
 Соединения на стороне шлюза ESP tx <-> NRF(32pin) p0.4(rx), ESP rx <-> NRF(32pin) p0.3(tx), ESP gpio02 <-> NRF reset. Шлюз опрашивает 16 NRF клиентов, по 4 числовых параметра в каждом. Имя каждого параметра до 32 символов должно быть определено при конфигурации  в espnrf web интерфейсе.  
