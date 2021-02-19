@@ -1,4 +1,4 @@
-# ESP8266+NRF24LE1 MQTT шлюз и NRF24LE1 беспроводной выключатель для встраивания в выключатели livolo, Maifon, Vhome и т.п.
+# ESP8266+NRF24LE1 MQTT шлюз и NRF24LE1 беспроводной выключатель для встраивания в выключатели livolo, Maifom, Vhome и т.п.
 ![PROJECT_PHOTO](https://raw.githubusercontent.com/alutov/nrf24le1-espnrf_gateway_and_remote_switch_for_livolo_etc/master/other/livolo1.jpg)
 ![PROJECT_PHOTO](https://raw.githubusercontent.com/alutov/nrf24le1-espnrf_gateway_and_remote_switch_for_livolo_etc/master/other/livolo2.jpg)
 ![PROJECT_PHOTO](https://raw.githubusercontent.com/alutov/nrf24le1-espnrf_gateway_and_remote_switch_for_livolo_etc/master/other/espnrf3.jpg)
