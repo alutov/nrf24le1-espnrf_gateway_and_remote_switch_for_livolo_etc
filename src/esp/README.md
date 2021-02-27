@@ -1,1 +1,1 @@
-Исходники для esp-01 шлюза.
+&emsp; Исходники для esp-01(esp8266) шлюза. Для сборки бинарных файлов использован  [ESP8266_RTOS_SDK (IDF Style) версии 3.2](https://codeload.github.com/espressif/ESP8266_RTOS_SDK/zip/v3.2) c [описанием](https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/) и [toolchain 5.2.0](https://dl.espressif.com/dl/xtensa-lx106-elf-win32-1.22.0-92-g8facf4c-5.2.0.tar.gz).<br>
