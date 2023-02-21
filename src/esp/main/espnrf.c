@@ -6,7 +6,7 @@ Use for compilation ESP-IDF Programming Guide:
 https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/
 ****************************************************************
 */
-#define AP_VER "2021.11.29"
+#define AP_VER "2023.02.17"
 #include "espnrf.h"
 
 typedef struct  {        // Preconfigured commands to show on web interface
@@ -236,18 +236,23 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	strcpy(llwtt,MQTT_BASE_TOPIC);
 	strcat(llwtt,"/status");
 	esp_mqtt_client_publish(client, llwtt, "online", 0, 1, 1);
-
-	strcpy(llwtt,MQTT_BASE_TOPIC);
-	strcat(llwtt,"/#");
-	esp_mqtt_client_subscribe(mqttclient, llwtt, 0);
-	mqttConnected = true;
-	if (FDHass && tESP8266Addr[0]) {
-//
 	tcpip_adapter_ip_info_t ipInfo;
 	char wbuff[256];
 	memset(wbuff,0,32);
 	tcpip_adapter_get_ip_info(TCPIP_ADAPTER_IF_STA, &ipInfo);
 	sprintf(wbuff, "%d.%d.%d.%d", IP2STR(&ipInfo.ip));
+	strcpy(llwtt,MQTT_BASE_TOPIC);
+	strcat(llwtt,"/ip");
+	esp_mqtt_client_publish(client, llwtt, wbuff, 0, 1, 1);
+
+	strcpy(llwtt,MQTT_BASE_TOPIC);
+	strcat(llwtt,"/#");
+	esp_mqtt_client_subscribe(mqttclient, llwtt, 0);
+	mqttConnected = true;
+	NumMqConn++;
+	if (!NumMqConn) NumMqConn--;
+	if (FDHass && tESP8266Addr[0]) {
+//
 	strcpy(llwtt,"homeassistant/sensor/");
 	strcat(llwtt,MQTT_BASE_TOPIC);
 	strcat(llwtt,"/1x");
@@ -320,7 +325,7 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	} else if((event->data_len) && (event->data_len < 64) && (event->topic_len) && (event->topic_len < 64)) {
 	memset(ttopic,0,128);
         memcpy(ttopic, event->topic, event->topic_len);
-	ttopic[event->topic_len] = 0;
+//	ttopic[event->topic_len] = 0;
 	strcpy(tbuff,MQTT_BASE_TOPIC);
 	strcat(tbuff,"/");
 	topoff = parsoff(event->topic,tbuff, event->topic_len);
@@ -379,6 +384,7 @@ static void mqtt_app_start(void)
 	.uri = luri,
 	.lwt_topic = llwtt,
 	.lwt_msg = "offline",
+	.lwt_retain = 1,
 //	.lwt_qos = 1,
 	.keepalive = 60,
 	.client_id = MQTT_CLIENT_NAME,
@@ -410,6 +416,16 @@ static esp_err_t wifi_event_handler(void *ctx, system_event_t *event)
 	case SYSTEM_EVENT_STA_GOT_IP:
 		xEventGroupSetBits(wifi_event_group, WIFI_CONNECTED_BIT);
 		s_retry_num = 0;
+		NumWfConn++;
+		if (!NumWfConn) NumWfConn--;
+	        if (floop && MQTT_SERVER[0]) {
+		char ttopic[32];
+		if (floop && MQTT_SERVER[0]) esp_mqtt_client_reconnect(mqttclient);
+//		if (floop && MQTT_SERVER[0]) esp_mqtt_client_start(mqttclient);
+		strcpy(ttopic,MQTT_BASE_TOPIC);
+		strcat(ttopic,"/nrfcmd mqtt 1\r\n");
+		uart_write_bytes(UART_NUM_0, ttopic, strlen(ttopic));
+		}
 
             break;
 	case SYSTEM_EVENT_STA_DISCONNECTED:
@@ -418,6 +434,7 @@ static esp_err_t wifi_event_handler(void *ctx, system_event_t *event)
                 /*Switch to 802.11 bgn mode */
                 esp_wifi_set_protocol(ESP_IF_WIFI_STA, WIFI_PROTOCAL_11B | WIFI_PROTOCAL_11G | WIFI_PROTOCAL_11N);
             }
+//	if (floop && MQTT_SERVER[0]) esp_mqtt_client_stop(mqttclient);
 	tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA,MQTT_CLIENT_NAME);
 	if (s_retry_num < WIFI_MAXIMUM_RETRY) {
 		esp_wifi_connect();
@@ -873,7 +890,6 @@ bool hassdiscovery()
 /* HTTP GET main handler */
 static esp_err_t pmain_get_handler(httpd_req_t *req)
 {
-	int FreeMem = esp_get_free_heap_size();
 	char bufip[32] = {0};
 	time_t now;
 	char strftime_buf[64];
@@ -890,7 +906,15 @@ static esp_err_t pmain_get_handler(httpd_req_t *req)
 //ESP_LOGI(TAG,"Ip from header %s", bufip); 
         }
     }
-	char bsend[14000];
+//	char bsend[14200];
+	char *bsend = NULL;
+	bsend = malloc(14200);
+	if (bsend == NULL) {
+	MemErr++;
+	if (!MemErr) MemErr--;
+//
+	} else {	
+	int FreeMem = esp_get_free_heap_size();
         char buff[64];
 	strcpy(bsend,"<!DOCTYPE html><html>");
 	strcat(bsend,"<head><title>espNRF</title>");
@@ -991,19 +1015,26 @@ static esp_err_t pmain_get_handler(httpd_req_t *req)
         buff[31] = 0;
 	memcpy(buff,wifidata.ssid,31);
         strcat(bsend,buff);
-	strcat(bsend,"</td></tr><tr><td>WiFi RSSI</td><td>");
+	strcat(bsend,"</td></tr><tr><td>WiFi connection count / RSSI</td><td>");
+	itoa(NumWfConn,buff,10);
+	strcat(bsend,buff);
+	strcat(bsend," / ");
         itoa(wifidata.rssi,buff,10);
 	strcat(bsend,buff);
         strcat(bsend," dB</td></tr><tr><td>WiFi IP address</td><td>");
         strcat(bsend,bufip);
 	strcat(bsend,"</td></tr>");
 	}
-	strcat(bsend,"<tr><td>MQTT server:port/state</td><td>");
+	strcat(bsend,"<tr><td>MQTT server:port</td><td>");
         if (MQTT_SERVER[0]) strcat(bsend,MQTT_SERVER);
 	strcat(bsend,":");
 	itoa(mqtt_port,buff,10);
 	strcat(bsend,buff);
-        (mqttConnected)? strcat(bsend,"/Connected") : strcat(bsend,"/Disconnected");
+	strcat(bsend,"<tr><td>MQTT connection count / state</td><td>");
+	itoa(NumMqConn,buff,10);
+	strcat(bsend,buff);
+	strcat(bsend," / ");
+        (mqttConnected)? strcat(bsend,"Connected") : strcat(bsend,"Disconnected");
 
 	strcat(bsend,"</td></tr></table><br><span style=\"font-size: 0.9em\">Running for ");
 	uptime_string_exp(buff);
@@ -1016,7 +1047,8 @@ static esp_err_t pmain_get_handler(httpd_req_t *req)
 	httpd_resp_send(req, bsend, strlen(bsend));
 
 
-
+	free(bsend);
+	}
     return ESP_OK;
 }
 
@@ -1200,7 +1232,14 @@ static const httpd_uri_t presetesp = {
 /* HTTP GET setting handler */
 static esp_err_t psetting_get_handler(httpd_req_t *req)
 {
-	char bsend[10000];
+//	char bsend[10000];
+	char *bsend = NULL;
+	bsend = malloc(10000);
+	if (bsend == NULL) {
+	MemErr++;
+	if (!MemErr) MemErr--;
+
+	} else {	
         char buff[32];
 	strcpy(bsend,"<!DOCTYPE html><html>");
 	strcat(bsend,"<head><title>espNRF</title>");
@@ -1259,6 +1298,8 @@ static esp_err_t psetting_get_handler(httpd_req_t *req)
 //strcat(bsend,buff);
 
 	httpd_resp_send(req, bsend, strlen(bsend));
+	free(bsend);
+	}
     return ESP_OK;
 }
 
@@ -1338,12 +1379,6 @@ smqpsw=esp&devnam=&rlight=255&glight=255&blight=255&chk2=2
 	itoa(espnrfnum,buf3,10);
 	strcat(buf2, buf3);
 	}
-	strcpy(buf1,buf2);
-	strcat(buf1,"/#");
-	mqtdel = 20;
-	esp_mqtt_client_subscribe(mqttclient, buf1, 0);
-	while (--mqtdel > 1) vTaskDelay(100 / portTICK_PERIOD_MS);
-
 	if (FDHass) {
 	strcpy(buf1,"homeassistant/sensor/");
 	strcat(buf1,buf2);
@@ -1358,18 +1393,18 @@ smqpsw=esp&devnam=&rlight=255&glight=255&blight=255&chk2=2
 	esp_mqtt_client_subscribe(mqttclient, buf1, 0);
 	while (--mqtdel > 1) vTaskDelay(100 / portTICK_PERIOD_MS);
 	}
+	strcpy(buf1,buf2);
+	strcat(buf1,"/#");
+	mqtdel = 20;
+	esp_mqtt_client_subscribe(mqttclient, buf1, 0);
+	while (--mqtdel > 1) vTaskDelay(100 / portTICK_PERIOD_MS);
+
 	if (espnrfnum != espnrfnumo)  {
 	strcpy(buf2, "nrf");
 	if (espnrfnumo)  {
 	itoa(espnrfnum,buf3,10);
 	strcat(buf2, buf3);
 	}
-	strcpy(buf1,buf2);
-	strcat(buf1,"/#");
-	mqtdel = 20;
-	esp_mqtt_client_subscribe(mqttclient, buf1, 0);
-	while (--mqtdel > 1) vTaskDelay(100 / portTICK_PERIOD_MS);
-
 	if (FDHass) {
 	strcpy(buf1,"homeassistant/sensor/");
 	strcat(buf1,buf2);
@@ -1384,6 +1419,12 @@ smqpsw=esp&devnam=&rlight=255&glight=255&blight=255&chk2=2
 	esp_mqtt_client_subscribe(mqttclient, buf1, 0);
 	while (--mqtdel > 1) vTaskDelay(100 / portTICK_PERIOD_MS);
 	}
+	strcpy(buf1,buf2);
+	strcat(buf1,"/#");
+	mqtdel = 20;
+	esp_mqtt_client_subscribe(mqttclient, buf1, 0);
+	while (--mqtdel > 1) vTaskDelay(100 / portTICK_PERIOD_MS);
+
 
 	}
 	}
@@ -1655,6 +1696,7 @@ Content-Type: application/octet-stream\r\n\r\n
 	mystrcpy(filnam, otabuf+otabufoffs, 127);
 // search for data begin
 	otabufoffs = parsoff(otabuf,"application/octet-stream\r\n\r\n", otabufsize);
+	if (!otabufoffs) otabufoffs = parsoff(otabuf,"application/macbinary\r\n\r\n", otabufsize);
 	if (!otabufoffs) {
 //	ESP_LOGE(TAG, "application/octet-stream not found");
 	ota_running = false;
@@ -1741,7 +1783,7 @@ httpd_handle_t start_webserver(void)
 	httpd_config_t config = HTTPD_DEFAULT_CONFIG();
 	config.max_uri_handlers = 16;
 //	config.max_resp_headers =16;
-	config.stack_size = 20480;
+	config.stack_size = 8192;
 
     // Start the httpd server
 /*
@@ -1789,6 +1831,8 @@ void app_main()
 //	f_update = false;
 	s_retry_num = 0;
 	floop = 0;
+	NumWfConn = 0;
+	NumMqConn = 0;
 	mqttConnected = false;
 	MQTT_USER[0] = 0;
 	MQTT_PASSWORD[0] = 0;
@@ -1859,7 +1903,7 @@ void app_main()
 	vTaskDelay(200 / portTICK_PERIOD_MS);
 
 // fill basic parameters
-	char tbuff[32];
+	char tbuff[64];
 	strcpy(MQTT_BASE_TOPIC, "nrf");
 	itoa(espnrfnum,tbuff,10);
 	strcat(MQTT_BASE_TOPIC, tbuff);
@@ -1882,7 +1926,7 @@ void app_main()
 /*
 to get MSK (GMT + 3) I need to write GMT-3
 */
-	char tzbuff[8];
+	char tzbuff[32];
 	uint8_t TimZn = TimeZone;
 	strcpy(tbuff,"GMT");
 	if (TimZn > 127 ) {

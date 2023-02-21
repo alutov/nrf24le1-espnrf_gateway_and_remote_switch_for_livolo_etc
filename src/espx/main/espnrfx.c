@@ -6,7 +6,7 @@ Use for compilation ESP-IDF Programming Guide:
 https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/
 ****************************************************************
 */
-#define AP_VER "2022.05.07"
+#define AP_VER "2023.02.17"
 #include "espnrf.h"
 
 typedef struct  {        // Preconfigured commands to show on web interface
@@ -748,6 +748,10 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	strcat(llwtd,MQTT_BASE_TOPIC);
 	strcat(llwtd,"/");
 	strcat(llwtd,NAMONOF1);
+	strcat(llwtd,"/set\",\"set_position_topic\":\"");
+	strcat(llwtd,MQTT_BASE_TOPIC);
+	strcat(llwtd,"/");
+	strcat(llwtd,NAMONOF1);
 	strcat(llwtd,"/set\",\"position_topic\":\"");
 	strcat(llwtd,MQTT_BASE_TOPIC);
 	strcat(llwtd,"/");
@@ -926,7 +930,6 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	stcvpos = 254;
 	prcvpos = 255;
 
-/*
 	} else {
 	int tempsz = event->data_len;
 	memset(tbuff,0,64);
@@ -935,9 +938,14 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	uint8_t tcvpos = 255;
 	if ((tbuff[0] > 0x30) && (tbuff[0] < 0x3a)) stcvpos = atoi(tbuff);
 	if (tcvpos < 101) {
-
+	if (tcvpos > 90) {
+	stcvpos = 100;
+	prcvpos = 255;
+	} else if (tcvpos < 10) {
+	stcvpos = 0;
+	prcvpos = 255;
+	} else  prcvpos = 255;
 	} 
-*/
 
 	}
 
@@ -992,6 +1000,7 @@ static void mqtt_app_start(void)
 	.uri = luri,
 	.lwt_topic = llwtt,
 	.lwt_msg = "offline",
+	.lwt_retain = 1,
 //	.lwt_qos = 1,
 	.keepalive = 60,
 	.client_id = MQTT_CLIENT_NAME,
@@ -1499,7 +1508,6 @@ bool hassdiscovery()
 /* HTTP GET main handler */
 static esp_err_t pmain_get_handler(httpd_req_t *req)
 {
-	int FreeMem = esp_get_free_heap_size();
 	char bufip[32] = {0};
 	time_t now;
 	char strftime_buf[64];
@@ -1516,7 +1524,15 @@ static esp_err_t pmain_get_handler(httpd_req_t *req)
 //ESP_LOGI(TAG,"Ip from header %s", bufip); 
         }
     }
-	char bsend[14200];
+//	char bsend[14200];
+	char *bsend = NULL;
+	bsend = malloc(14200);
+	if (bsend == NULL) {
+	MemErr++;
+	if (!MemErr) MemErr--;
+//
+	} else {	
+	int FreeMem = esp_get_free_heap_size();
         char buff[64];
 	strcpy(bsend,"<!DOCTYPE html><html>");
 	strcat(bsend,"<head><title>espNRF</title>");
@@ -1723,7 +1739,8 @@ static esp_err_t pmain_get_handler(httpd_req_t *req)
 	httpd_resp_send(req, bsend, strlen(bsend));
 
 
-
+	free(bsend);
+	}
     return ESP_OK;
 }
 
@@ -1907,7 +1924,14 @@ static const httpd_uri_t presetesp = {
 /* HTTP GET setting handler */
 static esp_err_t psetting_get_handler(httpd_req_t *req)
 {
-	char bsend[13000];
+//	char bsend[13000];
+	char *bsend = NULL;
+	bsend = malloc(13000);
+	if (bsend == NULL) {
+	MemErr++;
+	if (!MemErr) MemErr--;
+
+	} else {	
         char buff[32];
 	strcpy(bsend,"<!DOCTYPE html><html>");
 	strcat(bsend,"<head><title>espNRF</title>");
@@ -2077,6 +2101,8 @@ static esp_err_t psetting_get_handler(httpd_req_t *req)
 //strcat(bsend,buff);
 
 	httpd_resp_send(req, bsend, strlen(bsend));
+	free(bsend);
+	}
     return ESP_OK;
 }
 
@@ -2696,7 +2722,7 @@ httpd_handle_t start_webserver(void)
 	httpd_config_t config = HTTPD_DEFAULT_CONFIG();
 	config.max_uri_handlers = 16;
 //	config.max_resp_headers =16;
-	config.stack_size = 20480;
+	config.stack_size = 10240;
 
     // Start the httpd server
 /*
