@@ -6,7 +6,7 @@ Use for compilation ESP-IDF Programming Guide:
 https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/
 ****************************************************************
 */
-#define AP_VER "2023.02.17"
+#define AP_VER "2023.05.20"
 #include "espnrf.h"
 
 typedef struct  {        // Preconfigured commands to show on web interface
@@ -478,6 +478,40 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	strcat(llwtd,"/status\"}");
 	esp_mqtt_client_publish(mqttclient, llwtt, llwtd, 0, 1, 1);
 //
+	strcpy(llwtt,"homeassistant/button/");
+	strcat(llwtt,MQTT_BASE_TOPIC);
+	strcat(llwtt,"/1x");
+	strcat(llwtt,tESP8266Addr);
+	strcat(llwtt,"/config");
+	strcpy(llwtd,"{\"name\":\"espNRF");
+	if (espnrfnum)  {
+	itoa(espnrfnum,buff,10);
+	strcat(llwtd, buff);
+	}
+	strcat(llwtd,".Restart\",\"icon\":\"mdi:restart\",\"uniq_id\":\"Restart_");
+	strcat(llwtd,tESP8266Addr);
+	strcat(llwtd,"\",\"device\":{\"identifiers\":[\"espNRF_");
+	strcat(llwtd,tESP8266Addr);
+	strcat(llwtd,"\"],\"name\":\"espNRF");
+	if (espnrfnum)  {
+	strcat(llwtd, ".");
+	itoa(espnrfnum,buff,10);
+	strcat(llwtd, buff);
+	}
+	strcat(llwtd,"\",\"model\":\"espNRF\",\"sw_version\":\"");
+	strcat(llwtd,AP_VER);
+	if (wbuff[0]) {
+	strcat(llwtd,"\",\"configuration_url\":\"http://");
+	strcat(llwtd,wbuff);
+	}
+	strcat(llwtd,"\",\"manufacturer\":\"Espressif & Nordic Semiconductor\"},");
+	strcat(llwtd,"\"command_topic\":\"");
+	strcat(llwtd,MQTT_BASE_TOPIC);
+	strcat(llwtd,"/status\",\"payload_press\":\"restart\",\"availability_topic\":\"");
+	strcat(llwtd,MQTT_BASE_TOPIC);
+	strcat(llwtd,"/status\"}");
+	esp_mqtt_client_publish(mqttclient, llwtt, llwtd, 0, 1, 1);
+//
 
 	if (wmode == 1) {
 	if (NAMONOF1[0] && NAMONOF1[0] != 0x5f) {
@@ -820,6 +854,13 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	}
 	if (topoff) {
 	if (!memcmp(event->topic+topoff, "status", event->topic_len-topoff)) {
+	if ((!incascmp("restart",event->data,event->data_len)) || (!incascmp("reset",event->data,event->data_len))
+		|| (!incascmp("reboot",event->data,event->data_len))) {
+	esp_mqtt_client_publish(mqttclient, event->topic, "offline", 0, 1, 1);
+//	if (floop && MQTT_SERVER[0]) esp_mqtt_client_stop(mqttclient);
+	vTaskDelay(1000 / portTICK_PERIOD_MS);
+	esp_restart();
+	}
 	} else if (!memcmp(event->topic+topoff, "rssi", event->topic_len-topoff)) {
 	} else if (!memcmp(event->topic+topoff, "nrfrsp", event->topic_len-topoff)) {
 	} else if ((wmode == 1) && NAMONOF1[0] && (!memcmp(event->topic+topoff, NAMONOF1, event->topic_len-topoff))) {
@@ -1004,7 +1045,8 @@ static void mqtt_app_start(void)
 //	.lwt_qos = 1,
 	.keepalive = 60,
 	.client_id = MQTT_CLIENT_NAME,
-	.buffer_size = 2048,
+	.buffer_size = 1536,
+//	.task_stack = 7168,
         .event_handle = mqtt_event_handler,
 	};
 	mqttConnected =false;
@@ -2282,6 +2324,12 @@ smqpsw=esp&devnam=&rlight=255&glight=255&blight=255&chk2=2
 	mqtdel = 20;
 	esp_mqtt_client_subscribe(mqttclient, buf1, 0);
 	while (--mqtdel > 1) vTaskDelay(100 / portTICK_PERIOD_MS);
+	strcpy(buf1,"homeassistant/button/");
+	strcat(buf1,buf2);
+	strcat(buf1,"/#");
+	mqtdel = 20;
+	esp_mqtt_client_subscribe(mqttclient, buf1, 0);
+	while (--mqtdel > 1) vTaskDelay(100 / portTICK_PERIOD_MS);
 	strcpy(buf1,"homeassistant/lock/");
 	strcat(buf1,buf2);
 	strcat(buf1,"/#");
@@ -2315,6 +2363,12 @@ smqpsw=esp&devnam=&rlight=255&glight=255&blight=255&chk2=2
 	esp_mqtt_client_subscribe(mqttclient, buf1, 0);
 	while (--mqtdel > 1) vTaskDelay(100 / portTICK_PERIOD_MS);
 	strcpy(buf1,"homeassistant/switch/");
+	strcat(buf1,buf2);
+	strcat(buf1,"/#");
+	mqtdel = 20;
+	esp_mqtt_client_subscribe(mqttclient, buf1, 0);
+	while (--mqtdel > 1) vTaskDelay(100 / portTICK_PERIOD_MS);
+	strcpy(buf1,"homeassistant/button/");
 	strcat(buf1,buf2);
 	strcat(buf1,"/#");
 	mqtdel = 20;

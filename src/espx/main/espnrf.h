@@ -157,7 +157,7 @@ int floop = 0;
 
 
 
-char cssDatasheet[] = ""     // CSS
+const char cssDatasheet[] = ""     // CSS
                         ""  // some CSS from ESP Easy Mega
                         "<style>* {font-family: sans-serif; font-size: 12pt; margin: 0px; padding: 0px; box-sizing: border-box; }"
                         "h1 {font-size: 16pt; color: #07D; margin: 8px 0; font-weight: bold; }"
