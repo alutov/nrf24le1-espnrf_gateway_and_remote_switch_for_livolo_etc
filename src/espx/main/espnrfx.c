@@ -6,7 +6,7 @@ Use for compilation ESP-IDF Programming Guide:
 https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/
 ****************************************************************
 */
-#define AP_VER "2023.05.20"
+#define AP_VER "2023.08.04"
 #include "espnrf.h"
 
 typedef struct  {        // Preconfigured commands to show on web interface
@@ -449,12 +449,8 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	strcat(llwtt,"/1x");
 	strcat(llwtt,tESP8266Addr);
 	strcat(llwtt,"/config");
-	strcpy(llwtd,"{\"name\":\"espNRF");
-	if (espnrfnum)  {
-	itoa(espnrfnum,buff,10);
-	strcat(llwtd, buff);
-	}
-	strcat(llwtd,".Rssi\",\"icon\":\"mdi:wifi\",\"uniq_id\":\"Rssi_");
+	strcpy(llwtd,"{\"name\":\"");
+	strcat(llwtd,"Rssi\",\"icon\":\"mdi:wifi\",\"uniq_id\":\"Rssi_");
 	strcat(llwtd,tESP8266Addr);
 	strcat(llwtd,"\",\"device\":{\"identifiers\":[\"espNRF_");
 	strcat(llwtd,tESP8266Addr);
@@ -483,12 +479,8 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	strcat(llwtt,"/1x");
 	strcat(llwtt,tESP8266Addr);
 	strcat(llwtt,"/config");
-	strcpy(llwtd,"{\"name\":\"espNRF");
-	if (espnrfnum)  {
-	itoa(espnrfnum,buff,10);
-	strcat(llwtd, buff);
-	}
-	strcat(llwtd,".Restart\",\"icon\":\"mdi:restart\",\"uniq_id\":\"Restart_");
+	strcpy(llwtd,"{\"name\":\"");
+	strcat(llwtd,"Restart\",\"icon\":\"mdi:restart\",\"uniq_id\":\"Restart_");
 	strcat(llwtd,tESP8266Addr);
 	strcat(llwtd,"\",\"device\":{\"identifiers\":[\"espNRF_");
 	strcat(llwtd,tESP8266Addr);
@@ -521,8 +513,6 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	strcat(llwtt,tESP8266Addr);
 	strcat(llwtt,"/config");
 	strcpy(llwtd,"{\"name\":\"");
-//	strcat(llwtd,MQTT_BASE_TOPIC);
-//	strcat(llwtd,".");
 	strcat(llwtd,NAMONOF1);
 	strcat(llwtd,"\",\"icon\":\"mdi:electric-switch\",\"uniq_id\":\"Switch_1.");
 	strcat(llwtd,tESP8266Addr);
@@ -561,8 +551,6 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	strcat(llwtt,tESP8266Addr);
 	strcat(llwtt,"/config");
 	strcpy(llwtd,"{\"name\":\"");
-//	strcat(llwtd,MQTT_BASE_TOPIC);
-//	strcat(llwtd,".");
 	strcat(llwtd,NAMONOF2);
 	strcat(llwtd,"\",\"icon\":\"mdi:electric-switch\",\"uniq_id\":\"Switch_2.");
 	strcat(llwtd,tESP8266Addr);
@@ -601,8 +589,6 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	strcat(llwtt,tESP8266Addr);
 	strcat(llwtt,"/config");
 	strcpy(llwtd,"{\"name\":\"");
-//	strcat(llwtd,MQTT_BASE_TOPIC);
-//	strcat(llwtd,".");
 	strcat(llwtd,NAMONOF3);
 	strcat(llwtd,"\",\"icon\":\"mdi:electric-switch\",\"uniq_id\":\"Switch_3.");
 	strcat(llwtd,tESP8266Addr);
@@ -641,8 +627,6 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	strcat(llwtt,tESP8266Addr);
 	strcat(llwtt,"/config");
 	strcpy(llwtd,"{\"name\":\"");
-//	strcat(llwtd,MQTT_BASE_TOPIC);
-//	strcat(llwtd,".");
 	strcat(llwtd,NAMONOF4);
 	strcat(llwtd,"\",\"icon\":\"mdi:electric-switch\",\"uniq_id\":\"Switch_4.");
 	strcat(llwtd,tESP8266Addr);
@@ -682,8 +666,6 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	strcat(llwtt,tESP8266Addr);
 	strcat(llwtt,"/config");
 	strcpy(llwtd,"{\"name\":\"");
-//	strcat(llwtd,MQTT_BASE_TOPIC);
-//	strcat(llwtd,".");
 	strcat(llwtd,NAMONOF1);
 	strcat(llwtd,"\",\"icon\":\"mdi:lock\",\"uniq_id\":\"Lock_1.");
 	strcat(llwtd,tESP8266Addr);
@@ -720,8 +702,6 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	strcat(llwtt,tESP8266Addr);
 	strcat(llwtt,"/config");
 	strcpy(llwtd,"{\"name\":\"");
-//	strcat(llwtd,MQTT_BASE_TOPIC);
-//	strcat(llwtd,".");
 	strcat(llwtd,NAMONOF1);
 	strcat(llwtd,"\",\"icon\":\"mdi:counter\",\"uniq_id\":\"Count_1.");
 	strcat(llwtd,tESP8266Addr);
@@ -759,8 +739,6 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 	strcat(llwtt,tESP8266Addr);
 	strcat(llwtt,"/config");
 	strcpy(llwtd,"{\"name\":\"");
-//	strcat(llwtd,MQTT_BASE_TOPIC);
-//	strcat(llwtd,".");
 	strcat(llwtd,NAMONOF1);
 	strcat(llwtd,"\",\"icon\":\"mdi:garage\",\"uniq_id\":\"Cover_1.");
 	strcat(llwtd,tESP8266Addr);
@@ -1391,8 +1369,6 @@ bool hassdiscovery()
 	strcat(buft,tESP8266Addr);
 	strcat(buft,"/config");
 	strcpy(bufd,"{\"name\":\"");
-//	strcat(bufd,MQTT_BASE_TOPIC);
-//	strcat(bufd,".");
 	strcat(bufd,MQTT_DATA);
 	strcat(bufd,"\",\"icon\":\"mdi:electric-switch\",\"uniq_id\":\"Switch_");
         itoa(dev,ttbuff,10);
@@ -1445,8 +1421,6 @@ bool hassdiscovery()
        	strcat(buft,tESP8266Addr);
 	strcat(buft,"/config");
 	strcpy(bufd,"{\"name\":\"");
-//	strcat(bufd,MQTT_BASE_TOPIC);
-//	strcat(bufd,".");
 	strcat(bufd,MQTT_DATA);
 	strcat(bufd,"\",\"icon\":\"mdi:thermometer\",\"uniq_id\":\"Temp_");
         itoa(dev,ttbuff,10);
@@ -1495,8 +1469,6 @@ bool hassdiscovery()
 	strcat(buft,tESP8266Addr);
 	strcat(buft,"/config");
 	strcpy(bufd,"{\"name\":\"");
-//	strcat(bufd,MQTT_BASE_TOPIC);
-//	strcat(bufd,".");
 	strcat(bufd,MQTT_DATA);
 	strcat(bufd,"\",\"icon\":\"mdi:alpha-v-circle-outline\",\"uniq_id\":\"Volt_");
         itoa(dev,ttbuff,10);
